@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html oncontextmenu = 'return false' onselectstart = 'return false' ondragstart = 'return false'>
+<title>Generator - Sphere</title>
+<style type = 'text/css'>html{background:#000000;}
+#imageContainer{position:fixed;top:-99999px;left:-99999px;margin-top:0px;margin-left:0px;}
+#my-gui-container{position:fixed;top:0%;left:100%;margin-top:0px;margin-left:-245px;}
+</style>
+
+<div id='imageContainer'>
+  <img src='' id='image'>
+</div>
+<div id='my-gui-container'></div>
+
+<script type='text/javascript' src='dat.gui.js'></script>
+<script type='text/javascript'>
+
+var a = 0;
+var prev_src = '';
+var next_src = '';
+setInterval(function(){
+  if(a>1){
+    next_src = 'DATA/' + 'Radius' + text.Radius + '_Slices' + text.Slices + '_Thickness' + text.Thickness + '.jpg';
+  }
+
+  if(next_src != prev_src){document.getElementById('image').src= 'DATA/' + 'Radius' + text.Radius + '_Slices' + text.Slices + '_Thickness' + text.Thickness + '.jpg';
+  if(a>0){
+    document.getElementById('imageContainer').style.top='50%';document.getElementById('imageContainer').style.left='50%';
+  }
+  document.getElementById('imageContainer').style.marginTop=-image.height/2 + 'px';document.getElementById('imageContainer').style.marginLeft=-image.width/2 + 'px';a = a + 1;
+}
+prev_src = 'DATA/' + 'Radius' + text.Radius + '_Slices' + text.Slices + '_Thickness' + text.Thickness + '.jpg';
+}, 500);
+
+var myInterface = function(){
+  this.Radius = 10;
+  this.Slices = 10;
+  this.Thickness = 10;
+  this._RANDOMIZE = function(){Rnd();};
+};
+
+var text = new myInterface();
+var gui = new dat.GUI({ autoPlace: false });
+var customContainer = document.getElementById('my-gui-container');
+customContainer.appendChild(gui.domElement);
+gui.add(text, 'Radius', 1, 3).step(1);
+gui.add(text, 'Slices', 1, 6).step(1);
+gui.add(text, 'Thickness', 1, 8).step(1);
+gui.add(text, '_RANDOMIZE');
+text.Radius = 3;
+text.Slices = 3;
+text.Thickness = 3;
+for (var i in gui.__controllers) {
+  gui.__controllers[i].updateDisplay();
+}
+var Rnd = function(){
+  text.Radius = Math.round(1 + Math.random() * (3 - 1));
+  text.Slices = Math.round(1 + Math.random() * (6 - 1));
+  text.Thickness = Math.round(1 + Math.random() * (8 - 1));
+  for (var i in gui.__controllers) {
+    gui.__controllers[i].updateDisplay();
+  }
+};
+
+</script>
+<canvas>YOUR BROWSER DOESN'T SUPPORT THE CANVAS</canvas>
