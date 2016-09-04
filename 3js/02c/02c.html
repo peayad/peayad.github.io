@@ -38,8 +38,9 @@
 <script src="../libs/three.min.js"></script>
 <script src='../libs/dat.gui.min.js'></script>
 <script src="../libs/OrbitControls.js"></script>
-
 <script src="../libs/ThreeCSG.js"></script>
+
+<script src="myGeometry.js"></script>
 
 
 <script>
@@ -75,43 +76,25 @@
     scene.add(lights[1]);
     scene.add(lights[2]);
 
+    // universal parameters
+    var data = {
+        // sphere parameters
+        radius: 10,
+        widthSegments: 13,
+        heightSegments: 13,
 
-    var meshMaterial = new THREE.MeshPhongMaterial({
-        color: 0x156289,
-        emissive: 0x072534,
-        side: THREE.DoubleSide,
-        shading: THREE.FlatShading
-    });
+        // knifes parameters
+        knifesSpacing: 2,
+        knifesHeight: 1
+    };
 
-
-    var sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(15,30,30));
-
-    var boxMesh_1 = new THREE.Mesh(new THREE.BoxGeometry(30,1.5,30));
-    var boxMesh_2 = new THREE.Mesh(new THREE.BoxGeometry(30,1.5,30));
-
-    boxMesh_1.position.y += 3;
-    boxMesh_2.position.y -= 3;
-
-    var sphereBSP = new ThreeBSP(sphereMesh);
-    var boxBSP_1 = new ThreeBSP(boxMesh_1);
-    var boxBSP_2 = new ThreeBSP(boxMesh_2);
-
-    var subtraction = sphereBSP.subtract(boxBSP_1);
-    subtraction = subtraction.subtract(boxBSP_2);
-
-    var result = subtraction.toMesh(meshMaterial);
-
-    scene.add(result);
-
-    var prevFog = false;
-
-    var render = function () {
+    function render() {
 
         requestAnimationFrame(render);
 
         renderer.render(scene, camera);
 
-    };
+    }
 
     window.addEventListener('resize', function () {
 
@@ -122,6 +105,8 @@
 
     }, false);
 
+    initGUI();
+    updateGeometry();
     render();
 
 </script>
