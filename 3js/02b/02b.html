@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Three.js Geometry Browser</title>
+    <style>
+        @font-face {
+            font-family: 'inconsolata';
+            src: url('inconsolata.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'inconsolata';
+            font-size: 15px;
+            line-height: 18px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0.3em;
+            left: 0.5em;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<script src="../libs/three.min.js"></script>
+<script src='../libs/dat.gui.min.js'></script>
+<script src="../libs/OrbitControls.js"></script>
+
+<!--script src='geometry.js'></script-->
+
+<script src="../libs/ThreeCSG.js"></script>
+
+
+<script>
+
+    var gui = new dat.GUI();
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 50);
+    camera.position.z = 30;
+
+    var renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000);
+    document.body.appendChild(renderer.domElement);
+
+    var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableZoom = false;
+    orbit.enablePan = false;
+
+    var ambientLight = new THREE.AmbientLight(0x000000);
+    scene.add(ambientLight);
+
+    var lights = [];
+    lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+    lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+    lights[2] = new THREE.PointLight(0xffffff, 1, 0);
+
+    lights[0].position.set(0, 200, 0);
+    lights[1].position.set(100, 200, 100);
+    lights[2].position.set(-100, -200, -100);
+
+    scene.add(lights[0]);
+    scene.add(lights[1]);
+    scene.add(lights[2]);
+
+
+    var meshMaterial = new THREE.MeshPhongMaterial({
+        color: 0x156289,
+        emissive: 0x072534,
+        side: THREE.DoubleSide,
+        shading: THREE.FlatShading
+    });
+
+
+    var sphereMesh = new THREE.Mesh(new THREE.SphereGeometry(15,30,30));
+
+    var boxMesh_1 = new THREE.Mesh(new THREE.BoxGeometry(30,0.5,30));
+    var boxMesh_2 = new THREE.Mesh(new THREE.BoxGeometry(30,0.5,30));
+
+    boxMesh_1.position.y += 3;
+    boxMesh_2.position.y -= 3;
+
+    var sphereBSP = new ThreeBSP(sphereMesh);
+    var boxBSP_1 = new ThreeBSP(boxMesh_1);
+    var boxBSP_2 = new ThreeBSP(boxMesh_2);
+
+    var subtraction = sphereBSP.subtract(boxBSP_1);
+    subtraction = subtraction.subtract(boxBSP_2);
+
+    var result = subtraction.toMesh(meshMaterial);
+
+    scene.add(result);
+
+    var prevFog = false;
+
+    var render = function () {
+
+        requestAnimationFrame(render);
+
+        renderer.render(scene, camera);
+
+    };
+
+    window.addEventListener('resize', function () {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }, false);
+
+    render();
+
+</script>
+</body>
+</html>
