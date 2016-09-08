@@ -135,7 +135,7 @@ function initGUI() {
     curveFolder.add(data, 'A', 1.0, 3.0).step(0.1).onChange(updateGeometry);
     curveFolder.add(data, 'B', 1.0, 3.0).step(0.1).onChange(updateGeometry);
     curveFolder.add(data, 'C', 1.0, 3.0).step(0.1).onChange(updateGeometry);
-    //curveFolder.open();
+    curveFolder.open();
 
     gui.add(data, 'displayHorizontalSections').onChange(updateGeometry);
     gui.add(data, 'displayVerticalSections').onChange(updateGeometry);
