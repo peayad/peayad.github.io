@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Three.js Geometry Browser</title>
+    <style>
+        @font-face {
+            font-family: 'inconsolata';
+            src: url('inconsolata.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'inconsolata';
+            font-size: 15px;
+            line-height: 18px;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0.3em;
+            left: 0.5em;
+            color: #fff;
+        }
+    </style>
+
+    don't try to open the vertical sections right now, it's really bad and quite heavy :(
+</head>
+<body>
+
+<script src="../libs/three.min.js"></script>
+<script src='../libs/dat.gui.min.js'></script>
+<script src="../libs/OrbitControls.js"></script>
+<script src="../libs/ThreeCSG.js"></script>
+
+<script src="myGeometry.js"></script>
+
+
+<script>
+
+    var gui = new dat.GUI();
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight);
+    camera.position.z = 30;
+
+    var renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000);
+    document.body.appendChild(renderer.domElement);
+
+    var orbit = new THREE.OrbitControls(camera, renderer.domElement);
+    orbit.enableZoom = true;
+    orbit.enablePan = true;
+
+    var ambientLight = new THREE.AmbientLight(0x000000);
+    scene.add(ambientLight);
+
+    var lights = [];
+    lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+    lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+    lights[2] = new THREE.PointLight(0xffffff, 1, 0);
+
+    lights[0].position.set(0, 200, 0);
+    lights[1].position.set(100, 200, 100);
+    lights[2].position.set(-100, -200, -100);
+
+    scene.add(lights[0]);
+    scene.add(lights[1]);
+    scene.add(lights[2]);
+
+    // universal parameters
+    var data = {
+        // Circle parameters
+        radius: 5,
+        height: 20.0,
+        numberOfSections: 5,
+        numberOfVerticalSectinos: 5,
+        verticalThickness: 0.1,
+        thickness: 0.3,
+
+        // wave parameters
+        // f(x) = A sin(B*x - C) + D
+        A: 2.5, B: 1.3, C: 1.0,
+
+        // displayBooleans
+        displayHorizontalSections: true,
+        displayVerticalSections: false
+
+    };
+
+    function render() {
+
+        requestAnimationFrame(render);
+
+        renderer.render(scene, camera);
+
+    }
+
+    window.addEventListener('resize', function () {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+    }, false);
+
+    initGUI();
+    updateGeometry();
+    render();
+
+</script>
+</body>
+</html>

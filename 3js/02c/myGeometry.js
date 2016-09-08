@@ -26,29 +26,6 @@ function updateGeometry() {
 
     result = result.toMesh(meshMaterial);
 
-    /*
-     var boxMesh_1 = new THREE.Mesh(new THREE.BoxGeometry(data.radius * 2, 0.5, data.radius * 2));
-     var boxMesh_2 = new THREE.Mesh(new THREE.BoxGeometry(data.radius * 2, 0.5, data.radius * 2));
-
-     boxMesh_1.position.y += 3;
-     boxMesh_2.position.y -= 3;
-
-     var boxes = [];
-     boxes[0] = (boxMesh_1);
-     boxes[1] = (boxMesh_2);
-
-
-     var boxBSP_1 = new ThreeBSP(boxMesh_1);
-     var boxBSP_2 = new ThreeBSP(boxMesh_2);
-
-
-     var subtraction = sphereBSP.subtract(boxBSP_1);
-     subtraction = subtraction.subtract(boxBSP_2);
-
-
-     var result = subtraction.toMesh(meshMaterial);
-     */
-
     result.name = "finial_mesh";
     scene.add(result);
 }
@@ -67,5 +44,6 @@ function initGUI() {
 
     knifesFolder.add(data, 'knifesSpacing', 0.1, 5).onChange(updateGeometry);
     knifesFolder.add(data, 'knifesHeight', 0.05,2).onChange(updateGeometry);
+
 
 }

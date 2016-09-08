@@ -501,7 +501,7 @@ var guis = {
 		var data = {
 			segments : 12,
 			phiStart : 0,
-			phiLength : twoPi,
+			phiLength : twoPi
 		};
 
 		function generateGeometry() {
