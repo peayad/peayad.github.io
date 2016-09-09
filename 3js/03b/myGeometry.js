@@ -7,118 +7,77 @@ var meshMaterial = new THREE.MeshPhongMaterial({
 
 
 function updateGeometry() {
+    // if there is any pervious geometry delete it
     var selectedObject = scene.getObjectByName("finial_mesh");
     if (selectedObject != null) scene.remove(selectedObject);
 
-    var extrudeSettings =
-    {
-        amount: data.thickness,
-        bevelEnabled: false,
-        bevelSegments: 2,
-        steps: 1,
-        extrudePath: null
-    };
-
-
-    //resulting geometry
+    //declaring resulting geometry
     var result = new THREE.Object3D();
 
-    // building a series of circles
-    var circles = new THREE.Object3D();
-    var spacing = data.height / data.numberOfSections;
 
-    if (data.displayHorizontalSections) {
-        for (var i = 0; i < data.numberOfSections; i++) {
+    // starting with the rings
+    var circleSrfs_Three = new THREE.Object3D();        //the converted circle surfaces
+    var circleSrfs_Verb = [];                           //keeping it for intersecting lofts later on
+    var verticalSpacing = data.height / data.numberOfSections;
+    for (var i = 0; i <= data.numberOfSections; i++) {
+        // sine wave manipulation
+        // f(x) = A sin(B*x - C) + D
+        var radius = data.A * Math.sin(data.B * i - data.C) + data.radius;
 
-            // sine wave manipulation
-            // f(x) = A sin(B*x - C) + D
-            var radius = data.A * Math.sin(data.B * i - data.C) + data.radius;
+        var innerCircleVerb = new verb.geom.Circle([0, 0, i * verticalSpacing], [1, 0, 0], [0, 1, 0], radius);
+        var outerCircleVerb = new verb.geom.Circle([0, 0, i * verticalSpacing], [1, 0, 0], [0, 1, 0], radius + 3);
+        var loftedCircle = verb.geom.NurbsSurface.byLoftingCurves([innerCircleVerb, outerCircleVerb], 1);
+        var circleThree = new THREE.Mesh(loftedCircle.toThreeGeometry(), meshMaterial);
 
-            var arcShape = new THREE.Shape();
-            arcShape.absarc(0, 0, radius + 3, 0, Math.PI * 2, false);
+        circleSrfs_Three.add(circleThree);
+        circleSrfs_Verb.push(loftedCircle);
 
-            var holePath = new THREE.Path();
-            holePath.absarc(0, 0, radius, 0, Math.PI * 2, true);
-            arcShape.holes.push(holePath);
-
-            var geometry = new THREE.ExtrudeGeometry(arcShape, extrudeSettings);
-            var mesh = new THREE.Mesh(geometry, meshMaterial);
-            mesh.position.set(0, 0, i * spacing);
-            circles.add(mesh);
-        }
-        result.add(circles);
     }
 
-    if (data.displayVerticalSections) {
+    if(data.horizontalSections) result.add(circleSrfs_Three);
 
-        // building sections
-        var innerPoints = [];
-        //innerPoints.push(new THREE.Vector3(0, 0, 0));
-        var outerPoints = [];
-        //innerPoints.push(new THREE.Vector3(0, 0, 0));
 
-        for (var i = 0; i < data.numberOfSections; i++) {
-            var radius = data.A * Math.sin(data.B * i - data.C) + data.radius;
-            var x = radius * Math.cos(0);
-            var y = radius * Math.sin(0);
-            var z = i * spacing;
-            //points.push(new THREE.Vector3(x,y,z));
-            innerPoints.push(new THREE.Vector2(x, z));
+    if(data.verticalSections) {
+        // building vertical knifes
+        var knifes_Three = new THREE.Object3D();
+        var knifes_Verb = [];
+        var angularSpacing = Math.PI * 2 / data.numberOfVerticalSections;
+        for (var i = 0; i < data.numberOfVerticalSections; i++) {
 
-            x += 3;
-            outerPoints.push(new THREE.Vector2(x, z));
+            var r = data.radius + 10;
+            var x = r * Math.cos(i * angularSpacing);
+            var y = r * Math.sin(i * angularSpacing);
+
+            var baseLine = new verb.geom.BezierCurve([[0, 0, -1], [0, 0, data.height + 1]]);
+            var knifeSrf = new verb.geom.ExtrudedSurface(baseLine, [x, y, 0]);
+            var knifesSrf_Three = new THREE.Mesh(knifeSrf.toThreeGeometry(), meshMaterial);
+
+            knifes_Three.add(knifesSrf_Three);
+            knifes_Verb.push(knifeSrf)
         }
 
-        var points = innerPoints.concat(outerPoints.reverse());
-        points.push(innerPoints[0]);
-        var completeGeom = new THREE.LatheGeometry(points, 25, 0, 2 * Math.PI);
-        var completeLathe = new THREE.Mesh(completeGeom, meshMaterial);
-        completeLathe.rotation.set(Math.PI / 2, 0, 0);
-        if (data.displayVerticalSections) result.add(completeLathe);
-        var skinBSP = new ThreeBSP(completeLathe);
+        // calling for intersection between knifes and circles
+        var verticalSections_Verb = [];
+        var verticalSections_Three = new THREE.Object3D();
+        for (var j = 0; j < knifes_Verb.length; j++) {
+            var intersectionCurves = [];
+            for (var i = 0; i < circleSrfs_Verb.length; i++) {
+                console.log("hi there")
+                var intersectionCrv = new verb.geom.Intersect.surfaces(circleSrfs_Verb[i], knifes_Verb[j], 1e-6);
+                intersectionCurves.push(intersectionCrv[0]);
+            }
 
+            var loftedIntersection = verb.geom.NurbsSurface.byLoftingCurves(intersectionCurves, 1);
+            var loftedIntersection_Three = new THREE.Mesh(loftedIntersection.toThreeGeometry(), meshMaterial);
 
-        var triangleMeshes = new THREE.Object3D();
-        var step = Math.PI / data.numberOfVerticalSectinos;
-        for (var i = -2 * step; i < data.numberOfVerticalSectinos; i += step) {
-            var radius = 50;
-            x1 = radius * Math.cos(i + data.verticalThickness);
-            y1 = radius * Math.sin(i + data.verticalThickness);
-
-
-            x2 = radius * Math.cos(i + step - data.verticalThickness);
-            y2 = radius * Math.sin(i + step - data.verticalThickness);
-
-            var triangleShape = new THREE.Shape();
-            triangleShape.moveTo(0, 0);
-            triangleShape.lineTo(x1, y1);
-            triangleShape.lineTo(x2, y2);
-            triangleShape.lineTo(0, 0); // close path
-
-            var extrudeSettingsN = {
-                amount: data.height / 2,
-                bevelEnabled: true,
-                bevelSegments: 2,
-                steps: 2,
-                bevelSize: 1,
-                bevelThickness: 1
-            };
-
-            var triangleGeometry = new THREE.ExtrudeGeometry(triangleShape, extrudeSettingsN);
-            var triangleMesh = new THREE.Mesh(triangleGeometry, meshMaterial);
-            //triangleMeshes.add(triangleMesh);
-
-            var triangleBSP = new ThreeBSP(triangleMesh);
-            skinBSP = skinBSP.subtract(triangleBSP);
-
-            //result.add(triangleMesh);
+            verticalSections_Verb.push(loftedIntersection);
+            verticalSections_Three.add(loftedIntersection_Three);
         }
 
-        var skin = skinBSP.toMesh(meshMaterial);
-
-        result.add(skin);
+        result.add(verticalSections_Three);
     }
 
+    //declaring resulting geometry name, so we can find it later
     result.name = "finial_mesh";
     scene.add(result);
 }
@@ -129,10 +88,11 @@ function initGUI() {
 
     var mainFolder = gui.addFolder('Main');
 
-    mainFolder.add(data, 'radius', 5.0, 30.0).step(0.1).onChange(updateGeometry);
+    mainFolder.add(data, 'radius', 3.0, 30.0).step(0.1).onChange(updateGeometry);
     mainFolder.add(data, 'height', 3.0, 30.0).step(0.1).onChange(updateGeometry);
     mainFolder.add(data, 'thickness', 0.1, 1.0).step(0.1).onChange(updateGeometry);
     mainFolder.add(data, 'numberOfSections', 3, 10).step(1).onChange(updateGeometry);
+    mainFolder.add(data, 'numberOfVerticalSections', 3, 10).step(1).onChange(updateGeometry);
     mainFolder.open();
 
     var curveFolder = gui.addFolder('CurveFolder');
@@ -142,6 +102,8 @@ function initGUI() {
     curveFolder.add(data, 'C', 1.0, 3.0).step(0.1).onChange(updateGeometry);
     //curveFolder.open();
 
-    gui.add(data, 'displayHorizontalSections').onChange(updateGeometry);
-    gui.add(data, 'displayVerticalSections').onChange(updateGeometry);
+    var performanceFolder = gui.addFolder('Performance');
+    performanceFolder.add(data, 'horizontalSections').onChange(updateGeometry);
+    performanceFolder.add(data, 'verticalSections').onChange(updateGeometry);
+    //performanceFolder.open();
 }

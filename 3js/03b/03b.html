@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Three.js Geometry Browser</title>
+    <title>Grasshopper3D -----> Three.js + VerbNURBS</title>
     <style>
         @font-face {
             font-family: 'inconsolata';
@@ -34,13 +34,15 @@
     </style>
 </head>
 <body>
-
+<div>the script is heavy, so don't change the curve attributes before turing off the vertical sections</div>
 <script src="../libs/three.min.js"></script>
 <script src='../libs/dat.gui.min.js'></script>
 <script src="../libs/OrbitControls.js"></script>
 <script src="../libs/ThreeCSG.js"></script>
 
 <script src="myGeometry.js"></script>
+<script src="../libs/verb.js"></script>
+<script src="../libs/verbToThreeConversion.js"></script>
 
 
 <script>
@@ -82,7 +84,7 @@
         radius: 5,
         height: 20.0,
         numberOfSections: 5,
-        numberOfVerticalSectinos: 5,
+        numberOfVerticalSections: 5,
         verticalThickness: 0.1,
         thickness: 0.3,
 
@@ -90,10 +92,9 @@
         // f(x) = A sin(B*x - C) + D
         A: 2.5, B: 1.3, C: 1.0,
 
-
         // displayBooleans
-        displayHorizontalSections: true,
-        displayVerticalSections: false
+        horizontalSections: true,
+        verticalSections: true
 
     };
 
