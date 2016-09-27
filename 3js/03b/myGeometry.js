@@ -44,11 +44,11 @@ function updateGeometry() {
         var angularSpacing = Math.PI * 2 / data.numberOfVerticalSections;
         for (var i = 0; i < data.numberOfVerticalSections; i++) {
 
-            var r = data.radius + 10;
+            var r = data.radius + 5;
             var x = r * Math.cos(i * angularSpacing);
             var y = r * Math.sin(i * angularSpacing);
 
-            var baseLine = new verb.geom.BezierCurve([[0, 0, -1], [0, 0, data.height + 1]]);
+            var baseLine = new verb.geom.BezierCurve([[0, 0, -5], [0, 0, data.height + 5]]);
             var knifeSrf = new verb.geom.ExtrudedSurface(baseLine, [x, y, 0]);
             var knifesSrf_Three = new THREE.Mesh(knifeSrf.toThreeGeometry(), meshMaterial);
 
@@ -63,7 +63,7 @@ function updateGeometry() {
             var intersectionCurves = [];
             for (var i = 0; i < circleSrfs_Verb.length; i++) {
                 console.log("hi there")
-                var intersectionCrv = new verb.geom.Intersect.surfaces(circleSrfs_Verb[i], knifes_Verb[j], 1e-6);
+                var intersectionCrv = new verb.geom.Intersect.surfaces(circleSrfs_Verb[i], knifes_Verb[j], 0.01);
                 intersectionCurves.push(intersectionCrv[0]);
             }
 

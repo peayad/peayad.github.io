@@ -1,0 +1,25 @@
+<!DOCTYPE html><html oncontextmenu = 'return false' onselectstart = 'return false' ondragstart = 'return false'><title>GENERATOR</title><meta name = 'Plugin' content = 'GENERATOR'><meta name = 'Link (Plugin)' content = 'http://www.grasshopper3d.com/group/generator'><meta name = 'Rights' content = 'This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License'><meta name = 'Link (Rights)' content = 'http://creativecommons.org/licenses/by-nc-nd/3.0/'><meta name = 'Author' content = 'Antonio Turiello Design'><meta name = 'Link (Author)' content = 'http://antonioturiello.blogspot.com/p/designer.html'><meta name = 'Library' content = 'This work requires dat.gui.js'><meta name = 'Link (Library)' content = 'https://raw.github.com/dataarts/dat.gui/master/build/dat.gui.js'><meta name = 'Contact' content = 'Please contact me if you want to use it for commercial purposes'><meta name = 'Link (Contact)' content = 'antonioturiello.blog@gmail.com'><style type = 'text/css'>html{background:#000000;}#imageContainer{position:fixed;top:-99999px;left:-99999px;margin-top:0px;margin-left:0px;}#my-gui-container{position:fixed;top:0%;left:100%;margin-top:0px;margin-left:-245px;}</style><div id='imageContainer'><img src='' id='image'></div><div id='my-gui-container'></div><script type='text/javascript' src='dat.gui.js'></script><script type='text/javascript'>
+/*
+*
+* GENERATOR
+*
+* http://www.grasshopper3d.com/group/generator
+*
+* This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License
+*
+* http://creativecommons.org/licenses/by-nc-nd/3.0/
+*
+* Antonio Turiello Design
+*
+* http://antonioturiello.blogspot.com/p/designer.html
+*
+* This work requires dat.gui.js
+*
+* https://raw.github.com/dataarts/dat.gui/master/build/dat.gui.js
+*
+* Please contact me if you want to use it for commercial purposes
+*
+* antonioturiello.blog@gmail.com
+*
+*/
+var a = 0;var prev_src = '';var next_src = '';setInterval(function(){if(a>1){next_src = 'DATA/' + 'R' + text.R + '_H' + text.H + '_O' + text.O + '.jpg';}if(next_src != prev_src){document.getElementById('image').src= 'DATA/' + 'R' + text.R + '_H' + text.H + '_O' + text.O + '.jpg';if(a>0){document.getElementById('imageContainer').style.top='50%';document.getElementById('imageContainer').style.left='50%';}document.getElementById('imageContainer').style.marginTop=-image.height/2 + 'px';document.getElementById('imageContainer').style.marginLeft=-image.width/2 + 'px';a = a + 1;}prev_src = 'DATA/' + 'R' + text.R + '_H' + text.H + '_O' + text.O + '.jpg';}, 500);var myInterface = function(){this.Plugin = function(){toURL1();};this.Rights = function(){toURL2();};this.Author = function(){toURL3();};this.R = 10;this.H = 10;this.O = 10;this._RANDOMIZE = function(){Rnd();};};var text = new myInterface();var gui = new dat.GUI({ autoPlace: false });var customContainer = document.getElementById('my-gui-container');customContainer.appendChild(gui.domElement);var info = gui.addFolder('GENERATOR');info.add(text, 'Plugin');info.add(text, 'Rights');info.add(text, 'Author');gui.add(text, 'R', 1, 6).step(1);gui.add(text, 'H', 1, 6).step(1);gui.add(text, 'O', 1, 6).step(1);gui.add(text, '_RANDOMIZE');text.R = 3;text.H = 3;text.O = 3;for (var i in gui.__controllers) {gui.__controllers[i].updateDisplay();}var Rnd = function(){text.R = Math.round(1 + Math.random() * (6 - 1));text.H = Math.round(1 + Math.random() * (6 - 1));text.O = Math.round(1 + Math.random() * (6 - 1));for (var i in gui.__controllers) {gui.__controllers[i].updateDisplay();}};var toURL1 = function(){window.open('http://www.grasshopper3d.com/group/generator');};var toURL2 = function(){window.open('http://creativecommons.org/licenses/by-nc-nd/3.0/');};var toURL3 = function(){window.open('http://antonioturiello.blogspot.com/p/designer.html');};</script><canvas>YOUR BROWSER DOESN'T SUPPORT THE CANVAS</canvas>
