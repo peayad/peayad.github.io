@@ -51,8 +51,8 @@
 
     var gui = new dat.GUI();
     var scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 5000 );
-    camera.position.set( 0, 0, 250 );
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 350);
+    camera.position.z = 30;
 
     var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -86,9 +86,9 @@
     // universal parameters
     var data = {
         // sphere parameters
-        R: 1,
+        L: 1,
         H: 1,
-        O: 1
+        V: 1
     };
 
     function render() {

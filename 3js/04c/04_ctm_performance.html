@@ -23,14 +23,6 @@
             width: 100%;
             height: 100%
         }
-
-        #newWindow {
-            display: block;
-            position: absolute;
-            bottom: 0.3em;
-            left: 0.5em;
-            color: #fff;
-        }
     </style>
 </head>
 <body>
@@ -65,7 +57,7 @@
 
     var orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableZoom = true;
-    orbit.enablePan = false;
+    orbit.enablePan = true;
 
     var ambientLight = new THREE.AmbientLight(0x000000);
     scene.add(ambientLight);
@@ -86,9 +78,9 @@
     // universal parameters
     var data = {
         // sphere parameters
-        R: 1,
+        L: 1,
         H: 1,
-        O: 1
+        V: 1
     };
 
     function render() {
