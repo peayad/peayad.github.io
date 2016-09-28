@@ -6,64 +6,23 @@ var meshMaterial = new THREE.MeshPhongMaterial({
 });
 
 
-var ctmIsLoaded = false;
-var my3DObjects = new THREE.Object3D();
-var previousSelectedName = 'L1_H1_V1';
-
-function loadCTM_Files() {
-
-    for (var l = 1; l <= 6; l++) {
-        for (var h = 1; h <= 6; h++) {
-            for (var v = 1; v <= 6; v++) {
-
-                (function () {
-
-                    var meshName = 'L' + l + '_H' + h + '_V' + v;
-
-                    var loader = new THREE.CTMLoader();
-                    loader.load('CTM/' + meshName + '.ctm', function (geometry) {
-                        var mesh = new THREE.Mesh(geometry, meshMaterial);
-
-                        var obj = new THREE.Object3D();
-                        obj.name = meshName;
-
-                        obj.add(mesh);
-                        obj.visible = false;
-                        if(meshName == 'L1_H1_V1') obj.visible = true;
-
-                        my3DObjects.add(obj);
-                        //scene.add(obj);
-                    });
-
-                })();
-            }
-        }
-    }
-
-    scene.add(my3DObjects);
-    ctmIsLoaded = true;
-    console.log("CTM files loading is done!");
-}
-
 function updateGeometry() {
+    var selectedObject = scene.getObjectByName("finial_mesh");
+    if (selectedObject != null) {
+        scene.remove(selectedObject);
+    };
 
-    console.log('starting!');
+    var loader = new THREE.CTMLoader();
+    loader.load( 'CTM/L' + data.L + '_H' + data.H + '_V' + data.V + '.ctm', function ( geometry ) {
 
-    if (!ctmIsLoaded) loadCTM_Files();
+        var material = new THREE.MeshPhongMaterial( { color: 0x156289 } );
 
-    var selectedObject = scene.getObjectByName(previousSelectedName);
-    if(selectedObject) selectedObject.visible = false;
+        var mesh = new THREE.Mesh( geometry, meshMaterial );
+        mesh.name = 'finial_mesh';
+        mesh.position.set(0,0,0);
+        scene.add( mesh );
 
-    var objName = 'L' + data.L + '_H' + data.H + '_V' + data.V;
-
-    var newSelectedObject = scene.getObjectByName(objName);
-    if(newSelectedObject){
-        newSelectedObject.visible = true;
-    }
-
-    previousSelectedName = objName;
-
-    console.log('updated!');
+    } );
 
 }
 
