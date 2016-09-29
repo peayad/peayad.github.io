@@ -1,7 +1,8 @@
 
 function loadCTM_Files() {
-    console.log("CTM files is now loading!");
 
+    console.log("CTM files is now loading!");
+    // main material (applied to all objects)
     var meshMaterial = new THREE.MeshPhongMaterial({
         color: 0x156289,
         emissive: 0x072534,
@@ -9,7 +10,7 @@ function loadCTM_Files() {
         shading: THREE.FlatShading
     });
 
-
+    // looping throw parameters and load them all
     for (var l = 1; l <= 6; l++) {
         for (var h = 1; h <= 6; h++) {
             for (var v = 1; v <= 6; v++) {
@@ -38,12 +39,16 @@ function loadCTM_Files() {
     }
 
     scene.add(my3DObjects);
-    ctmIsLoaded = true;
+
     console.log("Loading is done!");
 }
 
-function updateGeometry() {
 
+function updateGeometry() {
+    /*
+    it's called each time the slider are changed to load a different object,
+    but it doesn't really reload, it just makes the previous one not visible the newly selected becomes visible
+     */
     var selectedObject = scene.getObjectByName(previousSelectedName);
     if(selectedObject) selectedObject.visible = false;
 
@@ -59,11 +64,3 @@ function updateGeometry() {
 }
 
 
-// GUI folders
-function initGUI() {
-
-    gui.add(data, 'L', 1, 6).step(1).onChange(updateGeometry);
-    gui.add(data, 'H', 1, 6).step(1).onChange(updateGeometry);
-    gui.add(data, 'V', 1, 6).step(1).onChange(updateGeometry);
-
-}

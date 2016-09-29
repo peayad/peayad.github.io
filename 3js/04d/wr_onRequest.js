@@ -5,7 +5,6 @@ var meshMaterial = new THREE.MeshPhongMaterial({
     shading: THREE.FlatShading
 });
 
-
 function updateGeometry() {
     var selectedObject = scene.getObjectByName("finial_mesh");
     if (selectedObject != null) {
@@ -25,11 +24,3 @@ function updateGeometry() {
 }
 
 
-// GUI folders
-function initGUI() {
-
-    gui.add(data, 'L', 1, 6).step(1).onFinishChange(updateGeometry);
-    gui.add(data, 'H', 1, 6).step(1).onFinishChange(updateGeometry);
-    gui.add(data, 'V', 1, 6).step(1).onFinishChange(updateGeometry);
-
-}
