@@ -59,6 +59,10 @@ function initScene(){
 
     initGUI();
 
+
+    THREE.DefaultLoadingManager.onProgress = function ( item, loaded, total ) {
+        console.log( item, loaded, total );
+    };
 }
 
 
