@@ -23,6 +23,19 @@ function initGUI(){
     myParamsFolder.open();
 }
 
+
+// my loading screen
+var loadingScreen = {
+    scene: new THREE.Scene(),
+    camera: new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.1, 1000 ),
+    box: new THREE.Mesh(
+    new THREE.BoxGeometry(10,10,10),
+    new THREE.MeshBasicMaterial({color:0x156289})
+    )
+};
+
+var RESOURCES_LOADED = false;
+
 // variables for loading the CTM files
 var my3DObjects = new THREE.Object3D();     // a parent to all loaded CTM files
 var previousSelectedName = 'L1_H1_V1';      // previously selected obj, so we can hide it
@@ -38,6 +51,22 @@ function initScene(){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 5000 );
     camera.position.set( 0, 0, 250 );
+
+
+    loadingScreen.camera.position.set( 0, 0, 250 );
+    loadingScreen.box.position.set(0,0,0);
+    loadingScreen.camera.lookAt(loadingScreen.box.position);
+    loadingScreen.scene.add(loadingScreen.box);
+
+    loadingManager = new THREE.LoadingManager();
+    loadingManager.onProgress = function(item,loaded,total){
+        console.log(item,loaded,total);
+    };
+
+    loadingManager.onLoad = function(){
+        console.log("loaded everything now!");
+        RESOURCES_LOADED = true;
+    };
 
     orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableZoom = true;
@@ -71,6 +100,17 @@ function initScene(){
 
 
 function animate() {
+
+    if( RESOURCES_LOADED == false ){
+        requestAnimationFrame(animate);
+
+        loadingScreen.box.rotateX(0.02);
+        loadingScreen.box.rotateY(0.01);
+        loadingScreen.box.rotateZ(0.015);
+
+        renderer.render(loadingScreen.scene,loadingScreen.camera);
+        return;
+    }
 
     requestAnimationFrame(animate);
 
