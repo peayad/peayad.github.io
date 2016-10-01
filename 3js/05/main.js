@@ -37,6 +37,7 @@ function initScene(){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 5000 );
     camera.position.set( 0, 0, 250 );
+    camera.updateProjectionMatrix();
 
     orbit = new THREE.OrbitControls(camera, renderer.domElement);
     orbit.enableZoom = true;
