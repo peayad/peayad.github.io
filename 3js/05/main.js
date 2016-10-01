@@ -2,14 +2,13 @@
 var scene,camera,renderer;
 var orbit, stats;
 var ambientLight, lights;
-var loadingManager;
 
 // gui data
 var gui, guiData;
 var GUI_data = function(){
-    this.L =1;
-    this.H = 1;
-    this.V = 1;
+    this.L =5;
+    this.H = 2;
+    this.V = 3;
 };
 
 function initGUI(){

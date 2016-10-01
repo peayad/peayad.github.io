@@ -29,7 +29,9 @@ function loadCTM_Files() {
 
                         obj.add(mesh);
                         obj.visible = false;
-                        if (meshName == 'L1_H1_V1') obj.visible = true;
+
+                        // make sure the obj corresponding the selected parameters only show up
+                        if (meshName == 'L' + guiData.L + '_H' + guiData.H + '_V' + guiData.V) obj.visible = true;
 
                         my3DObjects.add(obj);
                     });
