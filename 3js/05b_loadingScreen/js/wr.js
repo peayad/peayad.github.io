@@ -8,6 +8,7 @@ var GUI_data = function () {
     this.V = 3;
 };
 
+
 function initGUI() {
     guiData = new GUI_data();
     gui = new dat.GUI();

@@ -9,7 +9,6 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-document.addEventListener('keyup', onDocumentKeyUp, false);
 
 
 THREE.DefaultLoadingManager.onProgress = function (item, loaded, total) {
@@ -78,6 +77,9 @@ function init() {
         orbit = new THREE.OrbitControls(camera, container);
 
         initGUI();
+
+        previousSelectedName = 'L' + guiData.L + '_H' + guiData.H + '_V' + guiData.V;
+        updateGeometry();
     };
 
     $("progress").style.display = "block";
@@ -97,7 +99,7 @@ function init() {
 
     loader.callbackProgress = callbackProgress;
 
-    loader.load("scenes/basicScene.json", callbackFinished);
+    loader.load("scenes/ctmFiles.json", callbackFinished);
 
     //
 
@@ -124,20 +126,6 @@ function onDocumentMouseMove(event) {
 
 }
 
-function onDocumentKeyUp(event) {
-    var keycode = event.keyCode;
-    switch (keycode) {
-        case 32:
-            var obj = scene.getObjectByName('L1H1V1');
-            //obj.traverse(function(child){child.visible = false;});
-            //if(obj.visible == true) obj.visible=false;
-            //else obj.visible = true;
-            obj.material = new THREE.MeshBasicMaterial({color: 0xffffff, opacity: 1, wireframe: true});
-            break;
-    }
-}
-
-
 function createLoadScene() {
 
     var result = {
@@ -152,7 +140,7 @@ function createLoadScene() {
 
     var object, geometry, material, light, count = 500, range = 200;
 
-    material = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: true});
+    material = new THREE.MeshLambertMaterial({color: 0x156289, wireframe: true});
     geometry = new THREE.BoxGeometry(5, 5, 5);
 
     for (var i = 0; i < count; i++) {
